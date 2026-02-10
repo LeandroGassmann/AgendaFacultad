@@ -154,10 +154,10 @@
                 </button>
             </div>
             
-            <!-- Contenedor Flexible (Tipo Tabla Dinámica) -->
+            <!-- Contenedor Flexible Ajustado (Side by Side) -->
             <div class="flex-1 overflow-y-auto px-4 pb-4">
-                <div class="flex flex-wrap justify-center items-start gap-4" id="schedule-grid">
-                    <!-- Las columnas se inyectan aquí -->
+                <div class="flex flex-nowrap items-start gap-2 overflow-x-auto pb-4" id="schedule-grid">
+                    <!-- Las columnas se inyectan aquí con flex-1 para ajustarse -->
                 </div>
                  <div id="schedule-empty" class="hidden py-12 text-center bg-surface rounded-xl border border-dashed border-border max-w-5xl mx-auto w-full mt-4">
                     <p class="text-secondary text-sm">No tienes horarios configurados.</p>
@@ -582,7 +582,7 @@
                     }).join('');
                 }
 
-                // Renderizar Horario (VISTA DINÁMICA DE "COLUMNAS")
+                // Renderizar Horario (VISTA DINÁMICA AJUSTABLE)
                 const daysOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
                 const schGrid = document.getElementById('schedule-grid');
                 
@@ -596,23 +596,24 @@
                     document.getElementById('schedule-empty').classList.add('hidden');
                     schGrid.innerHTML = activeDays.map(d => {
                         const items = state.schedule.filter(s => s.day === d).sort((a,b) => a.start.localeCompare(b.start));
+                        // Uso flex-1 para repartir el espacio equitativamente, con un min-width pequeño para evitar colapso total
                         return `
-                        <div class="w-full sm:w-[260px] flex-grow bg-surface rounded-xl border border-border p-4 flex flex-col">
-                            <h3 class="font-bold text-primary mb-4 pb-2 border-b border-gray-100 text-center uppercase tracking-wide">
+                        <div class="flex-1 min-w-[140px] bg-surface rounded-xl border border-border p-3 flex flex-col">
+                            <h3 class="font-bold text-primary mb-3 pb-2 border-b border-gray-100 text-center uppercase tracking-wide text-xs">
                                 ${d}
                             </h3>
-                            <div class="space-y-3 flex-1">
+                            <div class="space-y-2 flex-1">
                                 ${items.map((item, idx) => {
                                     const st = app.getStyle(item.subject);
                                     const realIdx = state.schedule.indexOf(item);
                                     return `
-                                    <div class="p-3 rounded-lg border-l-4 ${st.border} ${st.bg} group relative transition-transform hover:scale-[1.01] shadow-sm">
-                                        <div class="flex justify-between items-center mb-1">
-                                            <span class="text-xs font-bold ${st.text} opacity-80">${item.start} - ${item.end}</span>
+                                    <div class="p-2 rounded-lg border-l-4 ${st.border} ${st.bg} group relative transition-transform hover:scale-[1.01] shadow-sm">
+                                        <div class="flex justify-between items-center mb-0.5">
+                                            <span class="text-[10px] font-bold ${st.text} opacity-80">${item.start} - ${item.end}</span>
                                             <button onclick="app.askDeleteSchedule(${realIdx})" class="text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                                         </div>
-                                        <p class="font-bold text-sm ${st.text} leading-tight">${item.subject}</p>
-                                        ${item.room ? `<p class="text-xs ${st.text} opacity-70 mt-1 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${item.room}</p>` : ''}
+                                        <p class="font-bold text-xs ${st.text} leading-tight">${item.subject}</p>
+                                        ${item.room ? `<p class="text-[10px] ${st.text} opacity-70 mt-1 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${item.room}</p>` : ''}
                                     </div>`
                                 }).join('')}
                             </div>
