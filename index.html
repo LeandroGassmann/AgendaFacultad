@@ -3,24 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniTracker Pro</title>
+    <title>UniTracker Pro - Versión Lite</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Iconos Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Markdown Parser -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         bg: '#F9FAFB',
                         surface: '#FFFFFF',
@@ -28,401 +20,272 @@
                         secondary: '#6B7280',
                         border: '#E5E7EB',
                         brand: '#4F46E5',
-                        ai: '#8B5CF6',
                     },
                     boxShadow: {
                         'card': '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.06)',
-                        'float': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                     },
                     animation: {
-                        'fade-in': 'fadeIn 0.3s ease-out',
-                        'slide-up': 'slideUp 0.3s ease-out',
+                        'fade-in': 'fadeIn 0.2s ease-out',
                     },
                     keyframes: {
-                        fadeIn: { from: { opacity: 0 }, to: { opacity: 1 } },
-                        slideUp: { from: { transform: 'translateY(10px)', opacity: 0 }, to: { transform: 'translateY(0)', opacity: 1 } }
+                        fadeIn: { from: { opacity: 0, transform: 'translateY(5px)' }, to: { opacity: 1, transform: 'translateY(0)' } }
                     }
                 }
             }
         }
     </script>
-
     <style>
-        body {
-            background-color: #F9FAFB;
-            color: #111827;
-            -webkit-font-smoothing: antialiased;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { background-color: #F9FAFB; color: #111827; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        /* Checkbox Personalizado */
         .checkbox-pro {
-            appearance: none;
-            width: 1.25rem;
-            height: 1.25rem;
-            border: 2px solid #D1D5DB;
-            border-radius: 0.375rem;
-            display: grid;
-            place-content: center;
-            transition: all 0.2s;
-            cursor: pointer;
+            appearance: none; width: 1.25rem; height: 1.25rem;
+            border: 2px solid #D1D5DB; border-radius: 0.375rem;
+            display: grid; place-content: center; cursor: pointer; transition: 0.2s;
         }
         .checkbox-pro::before {
-            content: "";
-            width: 0.65em;
-            height: 0.65em;
-            transform: scale(0);
-            transition: 120ms transform ease-in-out;
-            box-shadow: inset 1em 1em white;
-            background-color: white;
-            transform-origin: center;
+            content: ""; width: 0.65em; height: 0.65em; transform: scale(0);
+            background-color: white; transform-origin: center;
             clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+            transition: 120ms transform ease-in-out;
         }
-        .checkbox-pro:checked {
-            background-color: #4F46E5;
-            border-color: #4F46E5;
-        }
-        .checkbox-pro:checked::before {
-            transform: scale(1);
-        }
-        .cal-tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-8px);
-            width: 220px;
-            background: #1F2937;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            z-index: 50;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        .cal-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #1F2937 transparent transparent transparent;
-        }
-        .group:hover .cal-tooltip {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+        .checkbox-pro:checked { background-color: #4F46E5; border-color: #4F46E5; }
+        .checkbox-pro:checked::before { transform: scale(1); }
+
+        /* Scrollbar oculta pero funcional */
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .input-pro { width: 100%; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #111827; outline: none; transition: all; }
+        .input-pro:focus { border-color: #4F46E5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1); }
+        .label-pro { display: block; font-size: 0.75rem; font-weight: 700; color: #6B7280; text-transform: uppercase; margin-bottom: 0.375rem; }
     </style>
 </head>
-<body class="flex flex-col h-screen max-w-4xl mx-auto bg-bg">
+<body class="flex flex-col h-screen w-full bg-bg overflow-hidden">
 
-    <!-- Header Fijo Superior -->
-    <header class="bg-surface border-b border-border px-6 py-4 flex justify-between items-center sticky top-0 z-30">
-        <div>
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-8 bg-brand rounded-full"></div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-primary">Mi Agenda</h1>
-                    <p id="header-date" class="text-xs font-medium text-secondary uppercase tracking-wider">Cargando...</p>
-                </div>
+    <!-- Header -->
+    <header class="bg-surface border-b border-border px-6 py-4 flex justify-between items-center sticky top-0 z-30 shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-2 h-8 bg-brand rounded-full"></div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-primary">Mi Agenda</h1>
+                <p id="header-date" class="text-xs font-medium text-secondary uppercase tracking-wider">Cargando...</p>
             </div>
         </div>
-        <button onclick="openModal()" class="bg-brand hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors shadow-sm">
+        <button onclick="ui.toggleModal('modal-task', true)" class="bg-brand hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors shadow-sm active:scale-95 transform">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span class="hidden sm:inline">Nueva Actividad</span>
         </button>
     </header>
 
-    <!-- Contenido Principal -->
-    <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-8 pb-24 hide-scroll">
-
-        <!-- VISTA: DASHBOARD -->
-        <div id="view-dashboard" class="view-section animate-slide-up">
-            
-            <!-- AI Coach Banner -->
-            <div class="bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100 rounded-xl p-4 mb-6 relative overflow-hidden">
-                <div class="flex justify-between items-start relative z-10">
-                    <div>
-                        <h3 class="text-violet-900 font-bold text-sm flex items-center gap-2">
-                            <i data-lucide="sparkles" class="w-4 h-4 text-violet-600"></i> AI Coach
-                        </h3>
-                        <p class="text-violet-700 text-xs mt-1 max-w-md">Obtén un consejo estratégico diario basado en tu carga académica.</p>
-                    </div>
-                    <button onclick="getAICoachAdvice()" class="bg-white text-violet-600 border border-violet-200 hover:bg-violet-50 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors shadow-sm">
-                        Analizar Agenda
-                    </button>
-                </div>
-                <div id="ai-coach-response" class="hidden mt-3 pt-3 border-t border-violet-200 text-sm text-violet-800 italic font-medium animate-fade-in"></div>
-            </div>
-
-            <!-- Stats Rápidas -->
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 hide-scroll relative max-w-full mx-auto w-full">
+        
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view-section animate-fade-in max-w-5xl mx-auto">
+            <!-- Stats -->
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-surface p-4 rounded-xl border border-border shadow-card flex items-center gap-4">
+                <div class="bg-surface p-4 rounded-xl border border-border shadow-card flex items-center gap-4 transition-transform hover:scale-[1.01]">
                     <div class="p-3 bg-blue-50 rounded-full text-blue-600"><i data-lucide="clock" class="w-5 h-5"></i></div>
                     <div>
-                        <p class="text-2xl font-bold text-primary" id="dash-pending">0</p>
+                        <p class="text-2xl font-bold text-primary" id="stat-pending">0</p>
                         <p class="text-xs text-secondary font-medium uppercase">Pendientes</p>
                     </div>
                 </div>
-                <div class="bg-surface p-4 rounded-xl border border-border shadow-card flex items-center gap-4">
+                <div class="bg-surface p-4 rounded-xl border border-border shadow-card flex items-center gap-4 transition-transform hover:scale-[1.01]">
                     <div class="p-3 bg-green-50 rounded-full text-green-600"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
                     <div>
-                        <p class="text-2xl font-bold text-primary" id="dash-completed">0</p>
+                        <p class="text-2xl font-bold text-primary" id="stat-completed">0</p>
                         <p class="text-xs text-secondary font-medium uppercase">Completadas</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Filtros -->
+            <!-- Filters -->
             <div class="flex gap-1 bg-surface p-1 rounded-lg border border-border w-fit mb-6 shadow-sm">
-                <button onclick="filterList('all')" id="filter-all" class="px-4 py-1.5 rounded-md text-sm font-medium text-secondary hover:bg-gray-50 transition-colors">Todas</button>
-                <button onclick="filterList('pending')" id="filter-pending" class="px-4 py-1.5 rounded-md text-sm font-medium text-primary bg-gray-100 shadow-sm transition-colors">Pendientes</button>
-                <button onclick="filterList('completed')" id="filter-completed" class="px-4 py-1.5 rounded-md text-sm font-medium text-secondary hover:bg-gray-50 transition-colors">Listas</button>
+                <button onclick="app.setFilter('all')" id="btn-filter-all" class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors">Todas</button>
+                <button onclick="app.setFilter('pending')" id="btn-filter-pending" class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors">Pendientes</button>
+                <button onclick="app.setFilter('completed')" id="btn-filter-completed" class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors">Listas</button>
             </div>
 
-            <!-- Lista de Tareas -->
-            <div id="task-list" class="space-y-3"></div>
+            <!-- Task List -->
+            <div id="task-list" class="space-y-3 pb-4"></div>
+            
+            <!-- Empty State -->
             <div id="empty-state" class="hidden py-16 text-center">
                 <div class="inline-block p-4 bg-gray-50 rounded-full mb-3"><i data-lucide="inbox" class="w-8 h-8 text-gray-300"></i></div>
                 <p class="text-secondary font-medium">No hay actividades para mostrar.</p>
             </div>
         </div>
 
-        <!-- VISTA: CALENDARIO -->
-        <div id="view-calendar" class="view-section hidden animate-slide-up">
-            <div class="bg-surface rounded-xl border border-border shadow-card overflow-hidden">
-                <div class="px-6 py-4 border-b border-border flex justify-between items-center bg-gray-50/50">
+        <!-- CALENDAR VIEW -->
+        <div id="view-calendar" class="view-section hidden animate-fade-in max-w-5xl mx-auto">
+            <div class="bg-surface rounded-xl border border-border shadow-card"> 
+                <div class="px-6 py-4 border-b border-border flex justify-between items-center bg-gray-50/50 rounded-t-xl">
                     <h2 id="cal-title" class="text-lg font-bold text-primary capitalize"></h2>
                     <div class="flex gap-1">
-                        <button onclick="changeMonth(-1)" class="p-1.5 hover:bg-gray-200 rounded text-secondary transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                        <button onclick="changeMonth(1)" class="p-1.5 hover:bg-gray-200 rounded text-secondary transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="app.changeMonth(-1)" class="p-1.5 hover:bg-gray-200 rounded text-secondary transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                        <button onclick="app.changeMonth(1)" class="p-1.5 hover:bg-gray-200 rounded text-secondary transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                     </div>
                 </div>
                 <div class="p-6">
-                    <div class="grid grid-cols-7 gap-4 text-center mb-4">
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Dom</div>
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Lun</div>
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Mar</div>
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Mié</div>
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Jue</div>
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Vie</div>
-                        <div class="text-xs font-bold text-secondary uppercase tracking-wider">Sáb</div>
+                    <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                        <div class="text-xs font-bold text-secondary uppercase">Dom</div>
+                        <div class="text-xs font-bold text-secondary uppercase">Lun</div>
+                        <div class="text-xs font-bold text-secondary uppercase">Mar</div>
+                        <div class="text-xs font-bold text-secondary uppercase">Mié</div>
+                        <div class="text-xs font-bold text-secondary uppercase">Jue</div>
+                        <div class="text-xs font-bold text-secondary uppercase">Vie</div>
+                        <div class="text-xs font-bold text-secondary uppercase">Sáb</div>
                     </div>
-                    <div id="cal-grid" class="grid grid-cols-7 gap-2 auto-rows-fr"></div>
+                    <div id="cal-grid" class="grid grid-cols-7 gap-1 auto-rows-fr"></div>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA: HORARIO (NUEVA) -->
-        <div id="view-schedule" class="view-section hidden animate-slide-up">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-bold text-primary">Horario de Cursada</h2>
-                <button onclick="openScheduleModal()" class="text-sm font-medium text-brand hover:underline flex items-center gap-1">
+        <!-- SCHEDULE VIEW (HORARIO) - MODIFICADO -->
+        <div id="view-schedule" class="view-section hidden animate-fade-in w-full h-full flex flex-col">
+            <div class="flex justify-between items-center mb-6 max-w-6xl mx-auto w-full px-4 sm:px-1">
+                <h2 class="text-lg font-bold text-primary">Horario Semanal</h2>
+                <button onclick="ui.toggleModal('modal-schedule', true)" class="text-sm font-medium text-brand hover:underline flex items-center gap-1">
                     <i data-lucide="plus-circle" class="w-4 h-4"></i> Agregar
                 </button>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="schedule-grid">
-                <!-- Se llena con JS -->
-            </div>
             
-            <div id="schedule-empty" class="hidden py-12 text-center bg-surface rounded-xl border border-dashed border-border">
-                <p class="text-secondary text-sm">No tienes horarios configurados.</p>
-                <button onclick="openScheduleModal()" class="mt-2 text-brand text-xs font-bold hover:underline">Agregar materias</button>
+            <!-- Contenedor Flexible (Tipo Tabla Dinámica) -->
+            <div class="flex-1 overflow-y-auto px-4 pb-4">
+                <div class="flex flex-wrap justify-center items-start gap-4" id="schedule-grid">
+                    <!-- Las columnas se inyectan aquí -->
+                </div>
+                 <div id="schedule-empty" class="hidden py-12 text-center bg-surface rounded-xl border border-dashed border-border max-w-5xl mx-auto w-full mt-4">
+                    <p class="text-secondary text-sm">No tienes horarios configurados.</p>
+                </div>
             </div>
         </div>
 
-        <!-- VISTA: CONFIGURACIÓN -->
-        <div id="view-settings" class="view-section hidden animate-slide-up">
-            <div class="max-w-2xl mx-auto space-y-8">
-                <div>
-                    <h2 class="text-lg font-bold text-primary mb-4">Personalización</h2>
-                    
-                    <!-- Materias -->
-                    <div class="bg-surface rounded-xl border border-border shadow-card overflow-hidden mb-6">
-                        <div class="bg-gray-50 px-4 py-3 border-b border-border font-medium text-sm text-secondary">Materias</div>
-                        <div class="p-4">
-                            <div class="flex gap-2 mb-4">
-                                <input type="text" id="setting-new-subject" placeholder="Nueva materia..." class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand" onkeypress="handleSettingEnter(event, 'subjects')">
-                                <button onclick="addSetting('subjects')" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
-                            </div>
-                            <div id="list-subjects" class="flex flex-wrap gap-2"></div>
-                        </div>
+        <!-- SETTINGS VIEW -->
+        <div id="view-settings" class="view-section hidden animate-fade-in max-w-5xl mx-auto">
+            <div class="max-w-xl mx-auto space-y-8">
+                <h2 class="text-lg font-bold text-primary">Configuración</h2>
+                
+                <div class="bg-surface rounded-xl border border-border shadow-card p-4">
+                    <h3 class="font-bold text-sm text-primary mb-3">Mis Materias <span class="text-xs font-normal text-secondary ml-1">(El orden define el color)</span></h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="setting-new-subject" placeholder="Ej: Economía" class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand">
+                        <button onclick="app.addSetting('subjects')" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-gray-800"><i data-lucide="plus" class="w-4 h-4"></i></button>
                     </div>
+                    <div id="list-subjects" class="flex flex-wrap gap-2"></div>
+                </div>
 
-                    <!-- Tipos -->
-                    <div class="bg-surface rounded-xl border border-border shadow-card overflow-hidden">
-                        <div class="bg-gray-50 px-4 py-3 border-b border-border font-medium text-sm text-secondary">Tipos de Actividad</div>
-                        <div class="p-4">
-                            <div class="flex gap-2 mb-4">
-                                <input type="text" id="setting-new-type" placeholder="Nuevo tipo..." class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand" onkeypress="handleSettingEnter(event, 'types')">
-                                <button onclick="addSetting('types')" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
-                            </div>
-                            <div id="list-types" class="flex flex-wrap gap-2"></div>
-                        </div>
+                <div class="bg-surface rounded-xl border border-border shadow-card p-4">
+                    <h3 class="font-bold text-sm text-primary mb-3">Tipos de Actividad</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="setting-new-type" placeholder="Ej: Taller" class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand">
+                        <button onclick="app.addSetting('types')" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-gray-800"><i data-lucide="plus" class="w-4 h-4"></i></button>
                     </div>
+                    <div id="list-types" class="flex flex-wrap gap-2"></div>
                 </div>
 
                 <div class="pt-6 border-t border-border">
-                    <button onclick="resetApp()" id="btn-reset" class="text-red-600 hover:text-red-700 text-sm font-medium hover:underline transition-colors w-full text-left">
-                        ⚠️ Restaurar aplicación a estado inicial (Borra todo)
+                    <button onclick="app.confirmAction('¿Estás seguro de BORRAR TODO? Se reiniciará la app.', app.doFactoryReset)" class="w-full text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex justify-center items-center gap-2">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Restaurar de Fábrica (Borrar Todo)
                     </button>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- Barra de Navegación Inferior -->
-    <nav class="bg-surface border-t border-border px-6 py-3 flex justify-center gap-8 sticky bottom-0 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onclick="router('dashboard')" id="nav-dashboard" class="flex flex-col items-center gap-1 text-brand hover:text-brand transition-colors group w-16">
-            <i data-lucide="layout-grid" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[10px] font-semibold">Agenda</span>
+    <!-- Bottom Navigation -->
+    <nav class="bg-surface border-t border-border px-6 py-2 flex justify-center gap-8 sticky bottom-0 z-40 shrink-0">
+        <button onclick="ui.router('dashboard')" id="nav-dashboard" class="nav-btn flex flex-col items-center gap-1 text-brand w-16 p-1 rounded-lg">
+            <i data-lucide="layout-grid" class="w-6 h-6"></i><span class="text-[10px] font-semibold">Agenda</span>
         </button>
-        <button onclick="router('calendar')" id="nav-calendar" class="flex flex-col items-center gap-1 text-secondary hover:text-brand transition-colors group w-16">
-            <i data-lucide="calendar" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[10px] font-semibold">Calendario</span>
+        <button onclick="ui.router('calendar')" id="nav-calendar" class="nav-btn flex flex-col items-center gap-1 text-secondary w-16 p-1 rounded-lg hover:bg-gray-50">
+            <i data-lucide="calendar" class="w-6 h-6"></i><span class="text-[10px] font-semibold">Calendario</span>
         </button>
-        <button onclick="router('schedule')" id="nav-schedule" class="flex flex-col items-center gap-1 text-secondary hover:text-brand transition-colors group w-16">
-            <i data-lucide="clock" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[10px] font-semibold">Horario</span>
+        <button onclick="ui.router('schedule')" id="nav-schedule" class="nav-btn flex flex-col items-center gap-1 text-secondary w-16 p-1 rounded-lg hover:bg-gray-50">
+            <i data-lucide="clock" class="w-6 h-6"></i><span class="text-[10px] font-semibold">Horario</span>
         </button>
-        <button onclick="router('settings')" id="nav-settings" class="flex flex-col items-center gap-1 text-secondary hover:text-brand transition-colors group w-16">
-            <i data-lucide="settings-2" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
-            <span class="text-[10px] font-semibold">Ajustes</span>
+        <button onclick="ui.router('settings')" id="nav-settings" class="nav-btn flex flex-col items-center gap-1 text-secondary w-16 p-1 rounded-lg hover:bg-gray-50">
+            <i data-lucide="settings-2" class="w-6 h-6"></i><span class="text-[10px] font-semibold">Ajustes</span>
         </button>
     </nav>
 
-    <!-- MODAL TAREA -->
-    <div id="modal-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-        <div id="modal-content" class="bg-surface w-full max-w-lg rounded-xl shadow-2xl transform scale-95 transition-transform duration-200 overflow-hidden">
+    <!-- MODAL: NEW TASK -->
+    <div id="modal-task" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity opacity-0">
+        <div class="bg-surface w-full max-w-lg rounded-xl shadow-2xl overflow-hidden transform scale-95 transition-transform">
             <div class="bg-gray-50 px-6 py-4 border-b border-border flex justify-between items-center">
                 <h2 class="font-bold text-lg text-primary">Nueva Actividad</h2>
-                <button onclick="closeModal('modal-overlay', 'modal-content')" class="text-secondary hover:text-primary transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="ui.toggleModal('modal-task', false)" class="text-secondary hover:text-primary"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form onsubmit="saveTask(event)" id="form-task" class="p-6 space-y-5">
+            <form onsubmit="app.saveTask(event)" id="form-task" class="p-6 space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Tarea / Evento</label>
-                    <input type="text" id="inp-title" required placeholder="Ej: Parcial de Análisis" class="w-full border border-border rounded-lg px-4 py-2.5 text-primary text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all">
+                    <label class="label-pro">Título</label>
+                    <input type="text" id="inp-title" required class="input-pro" placeholder="Ej: Parcial de Análisis">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Materia</label>
-                        <select id="inp-subject" class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm bg-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Tipo</label>
-                        <select id="inp-type" class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm bg-white"></select>
-                    </div>
+                    <div><label class="label-pro">Materia</label><select id="inp-subject" class="input-pro bg-white"></select></div>
+                    <div><label class="label-pro">Tipo</label><select id="inp-type" class="input-pro bg-white"></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Fecha</label>
-                        <input type="date" id="inp-date" required class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Hora</label>
-                        <input type="time" id="inp-time" class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm">
-                    </div>
+                    <div><label class="label-pro">Fecha</label><input type="date" id="inp-date" required class="input-pro"></div>
+                    <div><label class="label-pro">Hora (Opcional)</label><input type="time" id="inp-time" class="input-pro"></div>
                 </div>
                 <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="block text-xs font-bold text-secondary uppercase">Detalles</label>
-                        <button type="button" onclick="generateAiDetails()" class="text-xs text-ai font-medium flex items-center gap-1 hover:underline"><i data-lucide="wand-2" class="w-3 h-3"></i> Autocompletar</button>
-                    </div>
-                    <textarea id="inp-details" rows="3" class="w-full border border-border rounded-lg px-3 py-2 text-primary text-sm resize-none"></textarea>
+                    <label class="label-pro">Detalles</label>
+                    <textarea id="inp-details" rows="3" class="input-pro resize-none"></textarea>
                 </div>
-                <div class="pt-2 flex gap-3">
-                    <button type="button" onclick="closeModal('modal-overlay', 'modal-content')" class="flex-1 bg-white border border-border text-primary font-medium py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-primary text-white font-medium py-2.5 rounded-lg hover:bg-gray-800 transition-colors shadow-sm">Guardar</button>
-                </div>
+                <button type="submit" class="w-full bg-brand text-white font-medium py-3 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm mt-2">Guardar Actividad</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL HORARIO -->
-    <div id="modal-schedule-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-        <div id="modal-schedule-content" class="bg-surface w-full max-w-sm rounded-xl shadow-2xl transform scale-95 transition-transform duration-200 overflow-hidden">
+    <!-- MODAL: NEW SCHEDULE -->
+    <div id="modal-schedule" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity opacity-0">
+        <div class="bg-surface w-full max-w-sm rounded-xl shadow-2xl overflow-hidden transform scale-95 transition-transform">
             <div class="bg-gray-50 px-6 py-4 border-b border-border flex justify-between items-center">
                 <h2 class="font-bold text-lg text-primary">Nuevo Horario</h2>
-                <button onclick="closeModal('modal-schedule-overlay', 'modal-schedule-content')" class="text-secondary hover:text-primary"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="ui.toggleModal('modal-schedule', false)" class="text-secondary hover:text-primary"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form onsubmit="saveSchedule(event)" id="form-schedule" class="p-6 space-y-4">
+            <form onsubmit="app.saveSchedule(event)" id="form-schedule" class="p-6 space-y-4">
+                <div><label class="label-pro">Materia</label><select id="sch-subject" class="input-pro bg-white"></select></div>
                 <div>
-                    <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Materia</label>
-                    <select id="sch-subject" class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm bg-white"></select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Día</label>
-                    <select id="sch-day" class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm bg-white">
-                        <option value="Lunes">Lunes</option>
-                        <option value="Martes">Martes</option>
-                        <option value="Miércoles">Miércoles</option>
-                        <option value="Jueves">Jueves</option>
-                        <option value="Viernes">Viernes</option>
-                        <option value="Sábado">Sábado</option>
+                    <label class="label-pro">Día</label>
+                    <select id="sch-day" class="input-pro bg-white">
+                        <option value="Lunes">Lunes</option><option value="Martes">Martes</option><option value="Miércoles">Miércoles</option>
+                        <option value="Jueves">Jueves</option><option value="Viernes">Viernes</option><option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Inicio</label>
-                        <input type="time" id="sch-start" required class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Fin</label>
-                        <input type="time" id="sch-end" required class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm">
-                    </div>
+                    <div><label class="label-pro">Inicio</label><input type="time" id="sch-start" required class="input-pro"></div>
+                    <div><label class="label-pro">Fin</label><input type="time" id="sch-end" required class="input-pro"></div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-secondary uppercase mb-1.5">Aula / Notas</label>
-                    <input type="text" id="sch-room" placeholder="Aula 302..." class="w-full border border-border rounded-lg px-3 py-2.5 text-primary text-sm">
-                </div>
-                <button type="submit" class="w-full bg-brand text-white font-medium py-2.5 rounded-lg hover:bg-indigo-700 mt-2">Agregar Horario</button>
+                <div><label class="label-pro">Aula / Notas</label><input type="text" id="sch-room" class="input-pro"></div>
+                <button type="submit" class="w-full bg-brand text-white font-medium py-3 rounded-lg hover:bg-indigo-700 mt-2">Guardar Horario</button>
             </form>
         </div>
     </div>
 
-    <!-- SCRIPT -->
+    <!-- MODAL: CONFIRMATION -->
+    <div id="modal-confirm" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 transition-opacity opacity-0">
+        <div class="bg-surface w-full max-w-xs rounded-xl shadow-2xl overflow-hidden transform scale-95 transition-transform p-6 text-center">
+            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-primary mb-2">¿Estás seguro?</h3>
+            <p id="confirm-msg" class="text-sm text-secondary mb-6">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-3 justify-center">
+                <button onclick="ui.closeConfirm()" class="px-4 py-2 rounded-lg border border-border text-primary font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
+                <button id="confirm-btn-action" class="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors shadow-sm">Sí, borrar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const apiKey = ""; 
-
-        async function callGemini(prompt) {
-            if (!apiKey) { alert("API Key no configurada."); return null; }
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text;
-            } catch (error) { console.error(error); return null; }
-        }
-
-        async function generateAiDetails() {
-            const title = document.getElementById('inp-title').value;
-            const subject = document.getElementById('inp-subject').value;
-            const detailsBox = document.getElementById('inp-details');
-            if (!title) return alert("Escribe un título primero.");
-            detailsBox.placeholder = "Generando...";
-            const res = await callGemini(`Dame una lista muy breve de temas para: "${title}" de la materia "${subject}".`);
-            if(res) detailsBox.value = res;
-            detailsBox.placeholder = "";
-        }
-
-        async function getAICoachAdvice() {
-            const tasks = state.tasks.filter(t => !t.completed);
-            const box = document.getElementById('ai-coach-response');
-            box.innerText = "Pensando...";
-            box.classList.remove('hidden');
-            const prompt = `Soy estudiante. Tengo estas tareas: ${JSON.stringify(tasks.map(t=>({t:t.title, d:t.date})))}. Dame un consejo estratégico breve.`;
-            const advice = await callGemini(prompt);
-            if(advice) box.innerHTML = marked.parse(advice);
-        }
-
+        // --- 1. CONFIGURACIÓN Y ESTADO ---
         const PALETTE = [
             { bg: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-200', dot: 'bg-indigo-500' },
             { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', dot: 'bg-emerald-500' },
@@ -430,297 +293,421 @@
             { bg: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-200', dot: 'bg-rose-500' },
             { bg: 'bg-sky-100', text: 'text-sky-700', border: 'border-sky-200', dot: 'bg-sky-500' },
             { bg: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200', dot: 'bg-violet-500' },
+            { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200', dot: 'bg-orange-500' },
+            { bg: 'bg-cyan-100', text: 'text-cyan-700', border: 'border-cyan-200', dot: 'bg-cyan-500' },
+            { bg: 'bg-lime-100', text: 'text-lime-700', border: 'border-lime-200', dot: 'bg-lime-500' },
+            { bg: 'bg-fuchsia-100', text: 'text-fuchsia-700', border: 'border-fuchsia-200', dot: 'bg-fuchsia-500' },
+            { bg: 'bg-pink-100', text: 'text-pink-700', border: 'border-pink-200', dot: 'bg-pink-500' },
+            { bg: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-200', dot: 'bg-teal-500' },
         ];
 
-        function getStyle(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            return PALETTE[Math.abs(hash) % PALETTE.length];
-        }
-
         const DEFAULTS = {
-            subjects: ["Matemática", "Programación", "Física", "Inglés", "Diseño"],
+            subjects: ["Matemática", "Programación", "Física", "Inglés", "Diseño", "Economía"],
             types: ["Parcial", "Final", "Entrega", "TP"]
         };
-        let state = {
-            tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-            schedule: JSON.parse(localStorage.getItem('schedule')) || [],
-            subjects: JSON.parse(localStorage.getItem('subjects')) || [...DEFAULTS.subjects],
-            types: JSON.parse(localStorage.getItem('types')) || [...DEFAULTS.types]
-        };
-        let currentFilter = 'all';
-        let calendarDate = new Date();
 
-        document.getElementById('header-date').innerText = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        router('dashboard');
-
-        function persist() {
-            localStorage.setItem('tasks', JSON.stringify(state.tasks));
-            localStorage.setItem('schedule', JSON.stringify(state.schedule));
-            localStorage.setItem('subjects', JSON.stringify(state.subjects));
-            localStorage.setItem('types', JSON.stringify(state.types));
-            render();
+        function cargarDatosSeguros(key, fallback) {
+            try {
+                const item = localStorage.getItem(key);
+                return item ? JSON.parse(item) : fallback;
+            } catch (e) {
+                console.warn(`Error cargando ${key}, usando default.`);
+                return fallback;
+            }
         }
 
-        function render() {
-            lucide.createIcons();
-            
-            // Dashboard
-            document.getElementById('dash-pending').innerText = state.tasks.filter(t => !t.completed).length;
-            document.getElementById('dash-completed').innerText = state.tasks.filter(t => t.completed).length;
-            
-            document.querySelectorAll('[id^="filter-"]').forEach(b => {
-                b.classList.remove('bg-gray-100', 'text-primary', 'shadow-sm');
-                b.classList.add('text-secondary', 'hover:bg-gray-50');
-            });
-            const activeBtn = document.getElementById(`filter-${currentFilter}`);
-            activeBtn.classList.remove('text-secondary', 'hover:bg-gray-50');
-            activeBtn.classList.add('bg-gray-100', 'text-primary', 'shadow-sm');
+        let state = {
+            tasks: cargarDatosSeguros('tasks', []),
+            schedule: cargarDatosSeguros('schedule', []),
+            subjects: cargarDatosSeguros('subjects', [...DEFAULTS.subjects]),
+            types: cargarDatosSeguros('types', [...DEFAULTS.types]),
+            filter: 'all',
+            calDate: new Date()
+        };
 
-            const listEl = document.getElementById('task-list');
-            const emptyEl = document.getElementById('empty-state');
-            
-            let filtered = state.tasks.sort((a,b) => new Date(a.date) - new Date(b.date));
-            if(currentFilter === 'pending') filtered = filtered.filter(t => !t.completed);
-            if(currentFilter === 'completed') filtered = filtered.filter(t => t.completed);
+        let pendingAction = null; 
 
-            if(filtered.length === 0) {
-                listEl.classList.add('hidden');
-                emptyEl.classList.remove('hidden');
-            } else {
-                listEl.classList.remove('hidden');
-                emptyEl.classList.add('hidden');
-                listEl.innerHTML = filtered.map(task => {
-                    const style = getStyle(task.subject);
-                    const days = Math.ceil((new Date(task.date+'T00:00:00') - new Date().setHours(0,0,0,0)) / 86400000);
-                    let dateLabel = new Date(task.date+'T00:00:00').toLocaleDateString('es-AR', {day:'2-digit', month:'short'});
-                    let dateClass = "text-secondary";
+        // --- 2. LÓGICA DE LA APP ---
+        const app = {
+            persist: () => {
+                localStorage.setItem('tasks', JSON.stringify(state.tasks));
+                localStorage.setItem('schedule', JSON.stringify(state.schedule));
+                localStorage.setItem('subjects', JSON.stringify(state.subjects));
+                localStorage.setItem('types', JSON.stringify(state.types));
+                ui.render();
+            },
+            
+            getStyle: (subjectName) => {
+                const name = subjectName ? subjectName.trim() : "";
+                const idx = state.subjects.indexOf(name);
+                if (idx !== -1) {
+                    return PALETTE[idx % PALETTE.length];
+                }
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                return PALETTE[Math.abs(hash) % PALETTE.length];
+            },
+
+            // Tareas
+            saveTask: (e) => {
+                e.preventDefault();
+                const newItem = {
+                    id: Date.now(),
+                    title: document.getElementById('inp-title').value,
+                    subject: document.getElementById('inp-subject').value,
+                    type: document.getElementById('inp-type').value,
+                    date: document.getElementById('inp-date').value,
+                    time: document.getElementById('inp-time').value,
+                    details: document.getElementById('inp-details').value,
+                    completed: false
+                };
+                state.tasks.push(newItem);
+                app.persist();
+                ui.toggleModal('modal-task', false);
+            },
+            toggleTask: (id) => {
+                const task = state.tasks.find(t => t.id === id);
+                if (task) { task.completed = !task.completed; app.persist(); }
+            },
+            
+            confirmAction: (msg, actionFn) => {
+                document.getElementById('confirm-msg').innerText = msg;
+                pendingAction = actionFn;
+                ui.openConfirm();
+            },
+            
+            askDeleteTask: (id) => {
+                app.confirmAction('¿Borrar esta actividad permanentemente?', () => {
+                    state.tasks = state.tasks.filter(t => t.id !== id);
+                    app.persist();
+                });
+            },
+            
+            askDeleteSchedule: (idx) => {
+                app.confirmAction('¿Borrar este horario?', () => {
+                    state.schedule.splice(idx, 1);
+                    app.persist();
+                });
+            },
+
+            setFilter: (f) => { state.filter = f; ui.render(); },
+
+            // Horarios
+            saveSchedule: (e) => {
+                e.preventDefault();
+                state.schedule.push({
+                    subject: document.getElementById('sch-subject').value,
+                    day: document.getElementById('sch-day').value,
+                    start: document.getElementById('sch-start').value,
+                    end: document.getElementById('sch-end').value,
+                    room: document.getElementById('sch-room').value
+                });
+                app.persist();
+                ui.toggleModal('modal-schedule', false);
+            },
+
+            // Calendario
+            changeMonth: (delta) => {
+                state.calDate.setMonth(state.calDate.getMonth() + delta);
+                ui.renderCalendar();
+            },
+
+            // Ajustes
+            addSetting: (key) => {
+                const id = key === 'subjects' ? 'setting-new-subject' : 'setting-new-type';
+                const el = document.getElementById(id);
+                const val = el.value.trim();
+                if (val && !state[key].includes(val)) {
+                    state[key].push(val);
+                    el.value = '';
+                    app.persist();
+                }
+            },
+            removeSetting: (key, idx) => {
+                state[key].splice(idx, 1);
+                app.persist();
+            },
+            factoryReset: () => {
+                app.confirmAction("⚠️ SE BORRARÁN TODOS LOS DATOS. ¿Continuar?", app.doFactoryReset);
+            },
+            doFactoryReset: () => {
+                localStorage.clear();
+                location.reload();
+            }
+        };
+
+        // --- 3. INTERFAZ DE USUARIO ---
+        const ui = {
+            init: () => {
+                document.getElementById('header-date').innerText = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                document.getElementById('inp-date').valueAsDate = new Date();
+                
+                document.getElementById('confirm-btn-action').addEventListener('click', () => {
+                    if (pendingAction) pendingAction();
+                    ui.closeConfirm();
+                });
+
+                ui.render();
+            },
+
+            openConfirm: () => {
+                const modal = document.getElementById('modal-confirm');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.firstElementChild.classList.remove('scale-95');
+                }, 10);
+            },
+
+            closeConfirm: () => {
+                const modal = document.getElementById('modal-confirm');
+                modal.classList.add('opacity-0');
+                modal.firstElementChild.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    pendingAction = null;
+                }, 200);
+            },
+
+            router: (view) => {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`view-${view}`).classList.remove('hidden');
+                
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.replace('text-brand', 'text-secondary');
+                    const icon = btn.querySelector('i') || btn.querySelector('svg');
+                    if (icon) icon.classList.remove('scale-110');
+                });
+                const active = document.getElementById(`nav-${view}`);
+                active.classList.replace('text-secondary', 'text-brand');
+                
+                const activeIcon = active.querySelector('i') || active.querySelector('svg');
+                if (activeIcon) activeIcon.classList.add('scale-110');
+                
+                if(view === 'calendar') ui.renderCalendar();
+                lucide.createIcons();
+            },
+
+            toggleModal: (modalId, show) => {
+                const modal = document.getElementById(modalId);
+                const content = modal.firstElementChild;
+                
+                if (show) {
+                    const prefix = modalId === 'modal-task' ? 'inp' : 'sch';
+                    const subSelect = document.getElementById(`${prefix}-subject`);
+                    subSelect.innerHTML = state.subjects.map(s => `<option>${s}</option>`).join('');
+                    if(modalId === 'modal-task') {
+                        document.getElementById('inp-type').innerHTML = state.types.map(t => `<option>${t}</option>`).join('');
+                        document.getElementById('form-task').reset();
+                        document.getElementById('inp-date').valueAsDate = new Date();
+                    } else {
+                        document.getElementById('form-schedule').reset();
+                    }
                     
-                    if(!task.completed) {
-                        if(days < 0) { dateLabel = "Vencido"; dateClass = "text-red-600 font-bold"; }
-                        else if(days === 0) { dateLabel = "Hoy"; dateClass = "text-blue-600 font-bold"; }
-                        else if(days === 1) { dateLabel = "Mañana"; dateClass = "text-amber-600 font-bold"; }
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        content.classList.remove('scale-95');
+                    }, 10);
+                } else {
+                    modal.classList.add('opacity-0');
+                    content.classList.add('scale-95');
+                    setTimeout(() => modal.classList.add('hidden'), 200);
+                }
+            },
+
+            render: () => {
+                document.getElementById('stat-pending').innerText = state.tasks.filter(t => !t.completed).length;
+                document.getElementById('stat-completed').innerText = state.tasks.filter(t => t.completed).length;
+
+                const listEl = document.getElementById('task-list');
+                const emptyEl = document.getElementById('empty-state');
+                
+                let filtered = [...state.tasks].sort((a,b) => a.date.localeCompare(b.date));
+                if (state.filter === 'pending') filtered = filtered.filter(t => !t.completed);
+                if (state.filter === 'completed') filtered = filtered.filter(t => t.completed);
+
+                ['all', 'pending', 'completed'].forEach(f => {
+                    const btn = document.getElementById(`btn-filter-${f}`);
+                    if(state.filter === f) {
+                        btn.className = "px-4 py-1.5 rounded-md text-sm font-bold bg-gray-200 text-primary shadow-inner";
+                    } else {
+                        btn.className = "px-4 py-1.5 rounded-md text-sm font-medium text-secondary hover:bg-gray-100";
+                    }
+                });
+
+                if (filtered.length === 0) {
+                    listEl.classList.add('hidden');
+                    emptyEl.classList.remove('hidden');
+                } else {
+                    listEl.classList.remove('hidden');
+                    emptyEl.classList.add('hidden');
+                    
+                    listEl.innerHTML = filtered.map(t => {
+                        const style = app.getStyle(t.subject);
+                        const taskDate = new Date(t.date + 'T00:00:00');
+                        const today = new Date(); today.setHours(0,0,0,0);
+                        const diffTime = taskDate - today;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        
+                        let dateText = taskDate.toLocaleDateString('es-AR', {day:'2-digit', month:'short'});
+                        let dateColor = "text-secondary";
+
+                        if (!t.completed) {
+                            if (diffDays < 0) { dateText = "Vencido"; dateColor = "text-red-600 font-bold"; }
+                            else if (diffDays === 0) { dateText = "Hoy"; dateColor = "text-blue-600 font-bold"; }
+                            else if (diffDays === 1) { dateText = "Mañana"; dateColor = "text-amber-600 font-bold"; }
+                        }
+
+                        return `
+                        <div class="bg-surface p-4 rounded-xl border border-border shadow-card hover:shadow-md transition-all group flex gap-4 items-start ${t.completed ? 'opacity-50 grayscale' : ''}">
+                            <div class="mt-1"><input type="checkbox" class="checkbox-pro" ${t.completed ? 'checked' : ''} onclick="app.toggleTask(${t.id})"></div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h3 class="font-bold text-primary leading-tight ${t.completed ? 'line-through' : ''}">${t.title}</h3>
+                                    <span class="text-[10px] ${dateColor} bg-gray-50 px-2 py-0.5 rounded border border-gray-100 uppercase tracking-wide whitespace-nowrap ml-2">${dateText}</span>
+                                </div>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${style.bg} ${style.text} border ${style.border}">${t.subject}</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-gray-100 text-gray-600 border border-gray-200">${t.type}</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs text-secondary">
+                                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> ${new Date(t.date+'T00:00:00').toLocaleDateString('es-AR')}</span>
+                                    ${t.time ? `<span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${t.time}</span>` : ''}
+                                </div>
+                                ${t.details ? `<p class="mt-2 text-xs text-gray-500 bg-gray-50 p-2 rounded italic border border-gray-100">${t.details}</p>` : ''}
+                            </div>
+                            <button onclick="event.stopPropagation(); app.askDeleteTask(${t.id})" class="text-gray-300 hover:text-red-500 z-10 p-2 transition-colors cursor-pointer rounded-full hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>`;
+                    }).join('');
+                }
+
+                // Renderizar Horario (VISTA DINÁMICA DE "COLUMNAS")
+                const daysOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+                const schGrid = document.getElementById('schedule-grid');
+                
+                // Filtrar solo los días que tienen horarios
+                const activeDays = daysOrder.filter(d => state.schedule.some(s => s.day === d));
+
+                if (state.schedule.length === 0) {
+                    schGrid.innerHTML = '';
+                    document.getElementById('schedule-empty').classList.remove('hidden');
+                } else {
+                    document.getElementById('schedule-empty').classList.add('hidden');
+                    schGrid.innerHTML = activeDays.map(d => {
+                        const items = state.schedule.filter(s => s.day === d).sort((a,b) => a.start.localeCompare(b.start));
+                        return `
+                        <div class="w-full sm:w-[260px] flex-grow bg-surface rounded-xl border border-border p-4 flex flex-col">
+                            <h3 class="font-bold text-primary mb-4 pb-2 border-b border-gray-100 text-center uppercase tracking-wide">
+                                ${d}
+                            </h3>
+                            <div class="space-y-3 flex-1">
+                                ${items.map((item, idx) => {
+                                    const st = app.getStyle(item.subject);
+                                    const realIdx = state.schedule.indexOf(item);
+                                    return `
+                                    <div class="p-3 rounded-lg border-l-4 ${st.border} ${st.bg} group relative transition-transform hover:scale-[1.01] shadow-sm">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-bold ${st.text} opacity-80">${item.start} - ${item.end}</span>
+                                            <button onclick="app.askDeleteSchedule(${realIdx})" class="text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                        </div>
+                                        <p class="font-bold text-sm ${st.text} leading-tight">${item.subject}</p>
+                                        ${item.room ? `<p class="text-xs ${st.text} opacity-70 mt-1 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${item.room}</p>` : ''}
+                                    </div>`
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+
+                // Renderizar Listas de Ajustes con Colores
+                const renderTags = (arr, elId, key) => {
+                    document.getElementById(elId).innerHTML = arr.map((item, i) => {
+                        let styleClass = "bg-gray-100 text-gray-700 border-gray-200";
+                        let dotHtml = '';
+                        
+                        if (key === 'subjects') {
+                            const st = PALETTE[i % PALETTE.length];
+                            dotHtml = `<span class="w-2 h-2 rounded-full ${st.dot} mr-1"></span>`;
+                            styleClass = `bg-white text-gray-700 border-gray-200`;
+                        }
+                        
+                        return `
+                        <span class="inline-flex items-center px-2 py-1.5 rounded-md text-xs font-medium border ${styleClass} shadow-sm">
+                            ${dotHtml} ${item} 
+                            <button onclick="app.removeSetting('${key}', ${i})" class="hover:text-red-600 ml-2 opacity-40 hover:opacity-100 transition-opacity"><i data-lucide="x" class="w-3 h-3"></i></button>
+                        </span>
+                    `}).join('');
+                };
+                renderTags(state.subjects, 'list-subjects', 'subjects');
+                renderTags(state.types, 'list-types', 'types');
+
+                ui.renderCalendar();
+                lucide.createIcons();
+            },
+
+            renderCalendar: () => {
+                const y = state.calDate.getFullYear(), m = state.calDate.getMonth();
+                document.getElementById('cal-title').innerText = new Date(y, m).toLocaleString('es-AR', { month: 'long', year: 'numeric' });
+                
+                const grid = document.getElementById('cal-grid');
+                const firstDay = new Date(y, m, 1).getDay();
+                const daysInMonth = new Date(y, m + 1, 0).getDate();
+                
+                let htmlContent = '';
+                for(let i=0; i<firstDay; i++) htmlContent += '<div></div>';
+                
+                for(let d=1; d<=daysInMonth; d++) {
+                    const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    const dayTasks = state.tasks.filter(t => t.date === dateStr);
+                    const hasTask = dayTasks.length > 0;
+                    const isToday = new Date().toDateString() === new Date(y, m, d).toDateString();
+                    
+                    let cls = "h-14 border border-border rounded-lg flex flex-col items-center justify-center relative hover:bg-gray-50 transition-colors group";
+                    if(isToday) cls += " bg-indigo-50 border-indigo-200 text-brand font-bold";
+                    
+                    let dotsHtml = '';
+                    if (hasTask) {
+                        dotsHtml = `<div class="flex gap-0.5 mt-1 px-1 justify-center flex-wrap max-w-full">`;
+                        dayTasks.slice(0, 4).forEach(t => {
+                            const style = app.getStyle(t.subject);
+                            dotsHtml += `<div class="w-1.5 h-1.5 rounded-full ${style.dot}"></div>`;
+                        });
+                        dotsHtml += `</div>`;
                     }
 
-                    return `
-                    <div class="bg-surface p-4 rounded-xl border border-border shadow-card hover:shadow-md transition-shadow group flex gap-4 items-start ${task.completed ? 'opacity-60 bg-gray-50' : ''}">
-                        <div class="mt-1">
-                            <input type="checkbox" class="checkbox-pro" ${task.completed ? 'checked' : ''} onclick="toggleTask(${task.id})">
+                    let tooltip = '';
+                    if (hasTask) {
+                        const taskItems = dayTasks.map(t => {
+                            const style = app.getStyle(t.subject);
+                            return `
+                            <div class="mb-1 last:mb-0">
+                                <div class="flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full ${style.dot}"></span>
+                                    <span class="font-medium text-primary truncate max-w-[120px]">${t.title}</span>
+                                </div>
+                                <div class="text-[10px] text-gray-500 pl-2.5 flex justify-between">
+                                    <span>${t.subject}</span>
+                                    <span>${t.time || ''}</span>
+                                </div>
+                            </div>`;
+                        }).join('');
+
+                        tooltip = `
+                        <div class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 p-3 text-left hidden group-hover:block pointer-events-none">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 pb-1 border-b border-gray-100">${d} de ${new Date(y, m).toLocaleString('es-AR', {month: 'long'})}</p>
+                            ${taskItems}
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-base font-bold text-primary leading-tight ${task.completed ? 'line-through text-gray-500' : ''}">${task.title}</h3>
-                                <span class="text-xs ${dateClass} shrink-0 ml-2 bg-white px-2 py-0.5 rounded border border-border shadow-sm">${dateLabel}</span>
-                            </div>
-                            <div class="flex flex-wrap gap-2 mb-3">
-                                <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide border ${style.bg} ${style.text} ${style.border}">${task.subject}</span>
-                                <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wide bg-gray-100 text-gray-600 border border-gray-200">${task.type}</span>
-                            </div>
-                            <div class="flex items-center gap-4 text-xs text-secondary mb-2 font-medium">
-                                <div class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i><span>${new Date(task.date+'T00:00:00').toLocaleDateString('es-AR')}</span></div>
-                                ${task.time ? `<div class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i><span>${task.time} hs</span></div>` : ''}
-                            </div>
-                            ${task.details ? `<div class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-100 text-sm text-gray-700 leading-relaxed">${task.details}</div>` : ''}
-                        </div>
-                        <button onclick="deleteTask(${task.id})" class="text-gray-300 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>`;
-                }).join('');
-            }
-
-            renderCalendar();
-            renderSchedule();
-            renderSettingList('subjects', state.subjects, 'list-subjects');
-            renderSettingList('types', state.types, 'list-types');
-            lucide.createIcons();
-        }
-
-        // --- CALENDAR ---
-        function renderCalendar() {
-            const grid = document.getElementById('cal-grid');
-            const title = document.getElementById('cal-title');
-            const y = calendarDate.getFullYear(), m = calendarDate.getMonth();
-            title.innerText = new Date(y, m).toLocaleString('es-AR', { month: 'long', year: 'numeric' });
-            const firstDay = new Date(y, m, 1).getDay();
-            const daysInMonth = new Date(y, m + 1, 0).getDate();
-            const today = new Date(); today.setHours(0,0,0,0);
-
-            grid.innerHTML = '';
-            for(let i=0; i<firstDay; i++) grid.innerHTML += '<div></div>';
-
-            for(let day=1; day<=daysInMonth; day++) {
-                const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const dayTasks = state.tasks.filter(t => t.date === dateStr);
-                const isToday = today.getTime() === new Date(dateStr+'T00:00:00').getTime();
-                
-                let boxClass = "bg-surface hover:bg-gray-50 border border-border text-secondary";
-                if(isToday) boxClass = "bg-primary text-white border-primary shadow-md";
-                
-                let dots = dayTasks.slice(0,3).map(t => {
-                    const s = getStyle(t.subject);
-                    return `<div class="w-1.5 h-1.5 rounded-full ${s.dot}"></div>`;
-                }).join('');
-
-                let tooltip = "";
-                if(dayTasks.length > 0) {
-                    const list = dayTasks.map(t => `<div class="mb-1 last:mb-0"><span class="font-bold text-gray-300 text-[10px] uppercase">${t.subject}:</span> ${t.title}</div>`).join('');
-                    tooltip = `<div class="cal-tooltip"><div class="font-bold border-b border-gray-600 mb-1 pb-1 text-xs">Eventos</div>${list}</div>`;
+                        `;
+                    }
+                    
+                    htmlContent += `<div class="${cls}"> <span class="text-sm">${d}</span> ${dotsHtml} ${tooltip} </div>`;
                 }
-
-                grid.innerHTML += `
-                <div onclick="openModal('${dateStr}')" class="group relative h-16 rounded-lg flex flex-col items-center justify-start pt-2 cursor-pointer transition-all ${boxClass}">
-                    <span class="text-sm font-semibold mb-1">${day}</span>
-                    <div class="flex gap-0.5 justify-center flex-wrap px-1 w-full">${dots}</div>
-                    ${tooltip}
-                </div>`;
+                grid.innerHTML = htmlContent;
             }
-        }
+        };
 
-        // --- SCHEDULE ---
-        function renderSchedule() {
-            const container = document.getElementById('schedule-grid');
-            const empty = document.getElementById('schedule-empty');
-            
-            if(state.schedule.length === 0) {
-                container.innerHTML = '';
-                empty.classList.remove('hidden');
-                return;
-            }
-            empty.classList.add('hidden');
-
-            const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-            container.innerHTML = days.map(day => {
-                const dayItems = state.schedule.filter(s => s.day === day).sort((a,b) => a.start.localeCompare(b.start));
-                if(dayItems.length === 0) return ''; // Ocultar días vacíos o mostrar placeholder? Mejor ocultar para limpiar.
-                
-                const cards = dayItems.map((item, idx) => {
-                    const s = getStyle(item.subject);
-                    return `
-                    <div class="p-3 mb-2 rounded-lg border-l-4 ${s.border} bg-gray-50 border border-gray-100 relative group">
-                        <p class="text-xs font-bold text-secondary mb-1">${item.start} - ${item.end}</p>
-                        <p class="text-sm font-bold text-primary">${item.subject}</p>
-                        <p class="text-xs text-secondary italic">${item.room || ''}</p>
-                        <button onclick="deleteScheduleItem(${state.schedule.indexOf(item)})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
-                    </div>`;
-                }).join('');
-
-                return `
-                <div class="bg-surface rounded-xl border border-border p-4 h-fit">
-                    <h3 class="font-bold text-primary mb-3 border-b border-border pb-2">${day}</h3>
-                    ${cards}
-                </div>`;
-            }).join('');
-        }
-
-        function saveSchedule(e) {
-            e.preventDefault();
-            const item = {
-                subject: document.getElementById('sch-subject').value,
-                day: document.getElementById('sch-day').value,
-                start: document.getElementById('sch-start').value,
-                end: document.getElementById('sch-end').value,
-                room: document.getElementById('sch-room').value
-            };
-            state.schedule.push(item);
-            persist();
-            closeModal('modal-schedule-overlay', 'modal-schedule-content');
-        }
-
-        function deleteScheduleItem(idx) {
-            if(confirm("¿Eliminar horario?")) {
-                state.schedule.splice(idx, 1);
-                persist();
-            }
-        }
-
-        // --- SETTINGS ---
-        function renderSettingList(k, arr, id) {
-            document.getElementById(id).innerHTML = arr.map((it, i) => {
-                let style = "bg-white border border-border text-secondary";
-                if(k === 'subjects') {
-                    const s = getStyle(it);
-                    style = `${s.bg} ${s.text} ${s.border} border`;
-                }
-                return `
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium ${style}">
-                    ${it} 
-                    <button onclick="remSetting('${k}', ${i})" class="hover:text-red-500 opacity-60 hover:opacity-100"><i data-lucide="x" class="w-3 h-3"></i></button>
-                </div>`;
-            }).join('');
-        }
-
-        // --- LOGIC ---
-        function router(v) {
-            document.querySelectorAll('.view-section').forEach(e => e.classList.add('hidden'));
-            document.getElementById(`view-${v}`).classList.remove('hidden');
-            document.querySelectorAll('nav button').forEach(b => b.classList.replace('text-brand', 'text-secondary'));
-            document.getElementById(`nav-${v}`).classList.replace('text-secondary', 'text-brand');
-            if(v==='calendar') renderCalendar();
-            if(v==='schedule') renderSchedule();
-        }
-        function filterList(f) { currentFilter = f; render(); }
-        function changeMonth(d) { calendarDate.setMonth(calendarDate.getMonth()+d); renderCalendar(); }
-        
-        function saveTask(e) {
-            e.preventDefault();
-            const t = {
-                id: Date.now(),
-                title: document.getElementById('inp-title').value,
-                subject: document.getElementById('inp-subject').value,
-                type: document.getElementById('inp-type').value,
-                date: document.getElementById('inp-date').value,
-                time: document.getElementById('inp-time').value,
-                details: document.getElementById('inp-details').value,
-                completed: false
-            };
-            state.tasks.push(t); persist(); closeModal('modal-overlay', 'modal-content');
-        }
-        function toggleTask(id) { const t = state.tasks.find(x=>x.id===id); if(t){t.completed=!t.completed; persist();}}
-        function deleteTask(id) { state.tasks = state.tasks.filter(x=>x.id!==id); persist(); }
-        
-        function addSetting(k) {
-            const el = document.getElementById(k==='subjects'?'setting-new-subject':'setting-new-type');
-            if(el.value && !state[k].includes(el.value)) { state[k].push(el.value); el.value=''; persist(); }
-        }
-        function handleSettingEnter(e, k) { if(e.key==='Enter') addSetting(k); }
-        function remSetting(k, i) { state[k].splice(i,1); persist(); }
-        
-        function resetApp() {
-            if(confirm("⚠️ ¿Estás seguro de que quieres BORRAR TODO (materias, tareas y horarios) y volver al inicio?")) {
-                state.tasks = [];
-                state.schedule = [];
-                state.subjects = [...DEFAULTS.subjects];
-                state.types = [...DEFAULTS.types];
-                persist();
-                alert("La aplicación ha sido restaurada.");
-            }
-        }
-
-        // --- MODALS ---
-        function openModal(d) {
-            const m = document.getElementById('modal-overlay'), c = document.getElementById('modal-content');
-            document.getElementById('form-task').reset();
-            document.getElementById('inp-subject').innerHTML = state.subjects.map(s=>`<option>${s}</option>`).join('');
-            document.getElementById('inp-type').innerHTML = state.types.map(t=>`<option>${t}</option>`).join('');
-            document.getElementById('inp-date').valueAsDate = d ? new Date(d+'T00:00:00') : new Date();
-            
-            m.classList.remove('hidden');
-            setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); c.classList.add('scale-100'); }, 10);
-        }
-        
-        function openScheduleModal() {
-            const m = document.getElementById('modal-schedule-overlay'), c = document.getElementById('modal-schedule-content');
-            document.getElementById('form-schedule').reset();
-            document.getElementById('sch-subject').innerHTML = state.subjects.map(s=>`<option>${s}</option>`).join('');
-            
-            m.classList.remove('hidden');
-            setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); c.classList.add('scale-100'); }, 10);
-        }
-
-        function closeModal(mId, cId) {
-            const m = document.getElementById(mId), c = document.getElementById(cId);
-            m.classList.add('opacity-0'); c.classList.remove('scale-100'); c.classList.add('scale-95');
-            setTimeout(() => m.classList.add('hidden'), 200);
-        }
+        window.onload = ui.init;
     </script>
 </body>
 </html>
